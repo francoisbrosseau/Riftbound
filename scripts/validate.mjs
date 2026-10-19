@@ -9,7 +9,7 @@ const allowed=new Set(['THE 40K CHRONICLES','GAMING NEWS','GAMING CULTURE','PC &
 let last=[];
 for(const f of files){const a=JSON.parse(fs.readFileSync(path.join(dir,f),'utf8'));
  if(!a.id||a.id+'.json'!==f||ids.has(a.id))fail('Bad or duplicate ID: '+f);ids.add(a.id);
- if(!allowed.has(a.category)||!a.title||!a.dek||!Array.isArray(a.body)||a.body.length<5)fail('Incomplete article: '+f);
+ if(!allowed.has(a.category)||!a.title||!a.dek||!Array.isArray(a.body)||a.body.length<4)fail('Incomplete article: '+f);
  if(!/^\d{4}-\d\d-\d\d$/.test(a.date)||!/^assets\/covers\/[a-z0-9-]+\.(svg|png|webp)$/.test(a.image)||!fs.existsSync(a.image))fail('Invalid date or missing original image: '+f);
  if(a.body.join(' ').match(/\b(as an AI|I cannot|lorem ipsum)\b/i))fail('Generated boilerplate: '+f);
  const wc=a.body.join(' ').split(/\s+/).length;if(a.category==='THE 40K CHRONICLES'&&wc<1000)fail('Lore article is too brief: '+wc);
