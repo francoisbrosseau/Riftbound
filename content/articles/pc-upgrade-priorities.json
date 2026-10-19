@@ -1,0 +1,16 @@
+{
+  "id": "pc-upgrade-priorities",
+  "category": "PC & TECH",
+  "title": "A Smarter Way to Plan Your Next PC Upgrade",
+  "dek": "Frame-rate numbers matter—but only after you understand the bottleneck.",
+  "image": "assets/covers/pc.svg",
+  "date": "2026-10-19",
+  "body": [
+    "## Diagnose before you buy\nA slow-feeling PC is not always a graphics-card problem. Stuttering can come from memory pressure, a processor limitation, background tasks, insufficient storage, thermal throttling, or the game itself. Spending money before measuring the problem is a reliable way to buy the wrong solution.",
+    "## Start with your actual games\nWrite down the games you play most, the display resolution, and whether you care more about smooth movement or maximum visual detail. Check observed frame rate, frame-time consistency, temperature, and memory usage. One quick test in a demanding scene teaches more than a shopping page of marketing figures.",
+    "## The upgrade order changes\nA machine short on memory may benefit more from RAM than a faster GPU. A PC struggling with storage space may need a clean-up and larger solid-state drive. A system running too hot may need maintenance before any new hardware. Every build has its own constraints.",
+    "## Don't neglect the experience\nNoise, stability, latency, comfortable controls, and a readable monitor influence enjoyment. The point of a gaming PC is not to win a specification contest. It is to help the games you love run comfortably."
+  ],
+  "sources": [],
+  "byline": "RIFTBOUND Editorial"
+}
