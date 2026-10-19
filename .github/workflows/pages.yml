@@ -29,10 +29,16 @@ jobs:
         run: |
           npm run build
           npm test
+      - name: Package only the public website
+        run: |
+          mkdir -p dist
+          cp index.html chapters.html gaming.html about.html CNAME dist/
+          cp -R stories assets dist/
+          touch dist/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: dist
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
