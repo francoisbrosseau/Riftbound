@@ -1,0 +1,2 @@
+# Riftbound
+Riftbound magazine
