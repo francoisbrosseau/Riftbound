@@ -1,0 +1,23 @@
+name: Check OpenAI API credential (no generation)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/api-check.yml'
+      - 'scripts/check-api.mjs'
+permissions:
+  contents: read
+jobs:
+  credential:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read-only API authentication check
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node scripts/check-api.mjs
