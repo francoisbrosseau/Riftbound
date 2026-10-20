@@ -22,3 +22,29 @@ if(!fs.readFileSync('index.html','utf8').includes(latest.date))fail('Homepage st
 for(const id of latest.articles)if(!fs.existsSync(path.join('stories',id+'.html')))fail('Reading page missing '+id);
 for(const x of ['HAYVN','WILDWIRE','RITUWILD','SANCTUARY'])if(!fs.readFileSync('index.html','utf8').includes(x))fail('Missing footer brand '+x);
 console.log('PASS: Six dated stories, original artwork, lore depth, archive links and Infinite Horizon footers');
+// Validate what readers receive, including relative image paths on nested pages.
+const pages=['index.html','chapters.html','gaming.html','about.html',...fs.readdirSync('stories').filter(x=>x.endsWith('.html')).map(x=>'stories/'+x)];
+for (const page of pages) {
+ const html=fs.readFileSync(page,'utf8');
+ if (/images\.unsplash\.com/.test(html)) fail('Stock image override returned: '+page);
+ for (const [,attribute,value] of html.matchAll(/\b(src|href)="([^"]+)"/g)) {
+  if (/^(https?:|#|mailto:|tel:)/.test(value)) continue;
+  const target=path.resolve(path.dirname(page),decodeURIComponent(value.split(/[?#]/)[0]));
+  if(!fs.existsSync(target)) fail('Broken '+attribute+' in '+page+': '+value);
+ }
+ if (!html.includes('assets/riftbound-logo.webp')) fail('Original logo missing: '+page);
+}
+for (const editionFile of editions) {
+ const edition=JSON.parse(fs.readFileSync(path.join('content/editions',editionFile),'utf8'));
+ if(edition.articles.length!==6||new Set(edition.articles).size!==6) fail('Invalid edition '+editionFile);
+ const images=new Set();
+ for(const id of edition.articles){
+  const a=JSON.parse(fs.readFileSync(path.join(dir,id+'.json'),'utf8'));
+  if(a.date!==edition.date) fail('Edition date mismatch: '+id);
+  if(fs.statSync(a.image).size<1000) fail('Empty or corrupt cover: '+id);
+  if(a.image.endsWith('.svg')) fail('Placeholder cover still active: '+id);
+  const hash=crypto.createHash('sha256').update(fs.readFileSync(a.image)).digest('hex');
+  if(images.has(hash)) fail('Repeated artwork: '+editionFile);images.add(hash);
+ }
+}
+console.log('PASS: All rendered local links and images, original logo, six distinct covers per edition');

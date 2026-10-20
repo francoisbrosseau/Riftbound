@@ -3,13 +3,15 @@
   "category": "PC & TECH",
   "title": "A Smarter Way to Plan Your Next PC Upgrade",
   "dek": "Frame-rate numbers matter—but only after you understand the bottleneck.",
-  "image": "assets/covers/pc.svg",
+  "image": "assets/covers/pc-upgrade-priorities.webp",
   "date": "2026-10-19",
   "body": [
     "## Diagnose before you buy\nA slow-feeling PC is not always a graphics-card problem. Stuttering can come from memory pressure, a processor limitation, background tasks, insufficient storage, thermal throttling, or the game itself. Spending money before measuring the problem is a reliable way to buy the wrong solution.",
     "## Start with your actual games\nWrite down the games you play most, the display resolution, and whether you care more about smooth movement or maximum visual detail. Check observed frame rate, frame-time consistency, temperature, and memory usage. One quick test in a demanding scene teaches more than a shopping page of marketing figures.",
     "## The upgrade order changes\nA machine short on memory may benefit more from RAM than a faster GPU. A PC struggling with storage space may need a clean-up and larger solid-state drive. A system running too hot may need maintenance before any new hardware. Every build has its own constraints.",
-    "## Don't neglect the experience\nNoise, stability, latency, comfortable controls, and a readable monitor influence enjoyment. The point of a gaming PC is not to win a specification contest. It is to help the games you love run comfortably."
+    "## Don't neglect the experience\nNoise, stability, latency, comfortable controls, and a readable monitor influence enjoyment. The point of a gaming PC is not to win a specification contest. It is to help the games you love run comfortably.",
+    "## Build a picture before building a shopping list\nChoose one game you actually play and one repeatable situation inside it. Note your resolution, graphics preset and the particular symptom: a low average frame rate, uneven motion, slow loading or poor image clarity. Change one setting at a time, then repeat the same route. Lowering resolution can help distinguish graphics load from other limits, but a single result is a clue rather than a diagnosis. Background applications, temperature, game settings and a frame-rate cap can all complicate the picture. Keep a few notes so you can compare like with like.",
+    "## Judge the whole experience\nAn upgrade should solve the problem you notice, not simply make a benchmark number larger. If your games already feel smooth at your preferred settings, a quieter system, better input comfort or a clearer display may matter more to you than additional frames. Any component purchase also belongs to an existing system: check the manufacturer documentation for power, physical clearance, connectors and compatibility before committing. Finish by setting a stopping point. Decide what improvement would satisfy you, verify whether you reached it, then enjoy the machine instead of endlessly preparing to enjoy it."
   ],
   "sources": [],
   "byline": "RIFTBOUND Editorial"

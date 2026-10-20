@@ -1,34 +1,33 @@
-# RIFTBOUND MAG — An Infinite Horizon Publication
+# RIFTBOUND MAGAZINE
 
-**Beyond the Screen. Into the Worlds.**
+https://riftboundmag.com — an independent Infinite Horizon gaming publication.
 
-RIFTBOUND is an independent gothic-futurist gaming magazine. Every daily edition aims to publish:
-- One substantial, original, source-checked, beginner-friendly Warhammer 40,000 lore chapter, serialized and indexed;
-- Five researched gaming stories spanning news, PC, MMO, RPG and culture;
-- Six original artwork images generated for that edition (no publisher-owned artwork or copied logos).
+## Source and artwork
 
-The Oct 19 launch edition ships with six original vector illustrations and six editorial articles. Future editions use the OpenAI image API for six distinct new visual artworks and the OpenAI text API for original editorial articles. Original generation does not guarantee noninfringement; prompts explicitly exclude protected character designs, faction insignia and promotional artwork. Faction names are only used in independent commentary, never represented as affiliation.
+`content/articles/*.json` is the editorial source; `npm run build` renders the homepage, archives and complete reading pages. The launch edition preserves Chapter 001 — The Wolves of Fenris and five gaming features. The six original raster covers and original shattered eclipse logo were recovered from the approved Riftbound conversation and optimized to local WebP files. Partner logos are authentic local copies. Stock-photo overrides have been removed.
 
-## Automation
+The homepage follows the approved future-gothic composition: architectural background, crimson accents, antique gold framing, lead chronicle and five editorial cards. Mobile uses full-width images and stacked reading cards. Preserve CNAME and permanent story URLs.
 
-GitHub Actions:
-- `daily-publish.yml`: runs at 07:15 America/Toronto (DST-safe UTC windows), idempotent by edition date; requires an `OPENAI_API_KEY` GitHub Actions repository secret. GitHub Actions secrets are per-repository and **cannot be inherited automatically from WILDWIRE**.
-- `pages.yml`: validates and deploys `main` to Pages.
+## Validation
 
-Configure **Settings → Secrets and variables → Actions → New repository secret → OPENAI_API_KEY**, and **Settings → Pages → Source → GitHub Actions**. No API key has been read or added by this assistant. The scheduled workflow and generator have been committed, but actual unattended publishing is unverified until this secret is configured and a successful issue is observed. Once configured, generation consumes paid API tokens and images. Do not assume daily publication succeeds before its first real run passes.
+- `npm run check`: syntax-check the publisher, renderer and validator.
+- `npm run build`: regenerate all public HTML from editorial JSON.
+- `npm test`: check six-story editions, distinct original artwork, every local link/image in rendered pages, and publisher integration tests with mocked API responses (no paid generation).
 
-`npm run build` regenerates all 40K and gaming archives and story pages from JSON article source. `npm test` validates each complete six-story edition and missing source artwork.
+## Publishing and deployment
 
-## Intellectual property and editorial boundaries
+`daily-publish.yml` is the single scheduled publisher. It starts at 07:15 America/Toronto using two UTC windows and a local-hour guard for daylight saving. Generation and deployment take additional time. The manual-only `daily-edition.yml` delegates to the same workflow for compatibility. Date-based idempotency prevents duplicate editions.
 
-Independent, unofficial, unaffiliated. Warhammer 40,000 is intellectual property of Games Workshop. RIFTBOUND does not reproduce copyrighted novels, rulebooks, lore book chapters, or promotional art. Articles are independently authored commentary and explanations; canon can vary by edition and retcons. Gaming news requires external verification; missing evidence causes an editorial failure instead of a fabricated claim. The world of Warhammer contains many factions and events rather than a definitive finite chapter count, so this is a curated evolving study series, not a reproduction of every licensed work.
+The publisher researches and generates one substantial lore chapter and five features spanning gaming culture, PC, MMORPGs, RPGs and console/cooperative gaming, each with original art. It validates the complete edition before committing. If main changes during generation, publication stops rather than rebasing stale rendered pages. A successful daily commit explicitly calls the reusable Pages workflow because commits made with GITHUB_TOKEN do not trigger another push workflow. Normal source commits also deploy through `pages.yml`.
 
-## Infinity Horizon network
+### Current external blocker
 
-Footer links: HAYVN Studio, HAYVN Sanctuary, WILDWIRE, RITUWILD.
+The inspected failed launch-artwork run (39344361927) returned OpenAI HTTP 401 `invalid_api_key`. The repository Actions secret `OPENAI_API_KEY` must contain a valid API credential, not its variable name. Credentials were not copied from other repositories. API responses and paid daily generation cannot be confirmed until that credential is corrected and a new complete edition runs successfully. The launch-artwork workflow now only verifies the recovered files; it never regenerates them.
 
-Website URL after GitHub Pages is enabled: https://francoisbrosseau.github.io/Riftbound/
+Publisher fixes include the malformed Responses request object, escaped template literals, missing console/culture categories, duplicate competing schedules, nested article image URLs and automatic deployment after bot commits. Publisher tests cover the API request schema, complete six-category output, repeat-run idempotency and fail-closed HTTP 401 handling. These tests do not establish that the configured external API credential works.
 
-## Publication safeguards
+## Network
 
-Daily publishing skips a date already archived, checks one detailed lore chapter and five distinct 800–1450-character gaming articles, generates six different editorial covers, builds the site, and validates before committing. All articles and images are prepared before writing an issue file. On failed generation/validation no git commit is pushed. The generator intentionally focuses on evergreen gaming commentary rather than falsely inventing breaking news. The GitHub Actions schedule starts at 07:15 Toronto local time, not a guarantee that a completed issue is live at 07:15.
+Footer links: HAYVN Studio, HAYVN Sanctuary, WILDWIRE and RITUWILD. Only Riftbound source was changed.
+
+Warhammer 40,000 and related names belong to Games Workshop. RIFTBOUND is independent and unaffiliated. Its articles are original commentary, not reproduced novels or rulebooks; editorial illustrations are independent artwork rather than official screenshots.

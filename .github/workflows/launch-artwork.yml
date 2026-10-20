@@ -1,4 +1,4 @@
-name: Upgrade Riftbound launch illustrations
+name: Verify recovered Riftbound launch illustrations
 on:
   push:
     branches: [main]
@@ -22,9 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Create six distinct cinematic launch covers
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: Verify recovered original artwork
         run: node scripts/upgrade-launch-artwork.mjs
       - name: Render and validate
         run: |

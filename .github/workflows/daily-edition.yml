@@ -1,57 +1,11 @@
-name: RIFTBOUND — Daily edition
-
+name: RIFTBOUND — Manual edition (compatibility)
 on:
-  schedule:
-    - cron: '10 4,8,12 * * *'
-      timezone: America/Toronto
   workflow_dispatch:
-
 permissions:
   contents: write
-
-concurrency:
-  group: riftbound-daily
-  cancel-in-progress: false
-
+  pages: write
+  id-token: write
 jobs:
   edition:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 75
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Check repository API credentials
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          if [ -z "$OPENAI_API_KEY" ]; then
-            echo "::error::Missing OPENAI_API_KEY repository secret. Configure in Settings > Secrets and variables > Actions."
-            exit 1
-          fi
-      - name: Research, generate and illustrate the six articles
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: node scripts/publish.mjs
-      - name: Build reading pages and archives
-        run: npm run build
-      - name: Validate complete issue
-        run: npm test
-      - name: Commit a complete validated issue
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add content/articles content/editions assets/covers index.html chapters.html gaming.html about.html stories
-          if git diff --cached --quiet; then
-            echo 'Edition already published: no changes'
-            exit 0
-          fi
-          git commit -m "Publish RIFTBOUND daily magazine edition"
-          git reset --hard HEAD
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
+    uses: ./.github/workflows/daily-publish.yml
+    secrets: inherit

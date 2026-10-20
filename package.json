@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node scripts/validate.mjs"
+    "test": "node scripts/validate.mjs && node --test tests/publisher.test.mjs",
+    "check": "node --check scripts/build.mjs && node --check scripts/publish.mjs && node --check scripts/daily-publish.mjs && node --check scripts/validate.mjs"
   }
 }
