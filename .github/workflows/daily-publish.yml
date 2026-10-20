@@ -36,7 +36,7 @@ jobs:
         run: |
           HOUR=$(TZ=America/Toronto date +%H)
           DATE=$(TZ=America/Toronto date +%F)
-          if [ "$EVENT_NAME" = "schedule" ] && [ "$HOUR" != "07" ]; then echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$EVENT_NAME" = "schedule" ] && [ "$HOUR" -lt 7 ]; then echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           if [ -f "content/editions/$DATE.json" ]; then echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           echo "publish=true" >> "$GITHUB_OUTPUT"
       - name: Research and generate six articles and original covers

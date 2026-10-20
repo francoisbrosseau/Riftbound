@@ -16,7 +16,7 @@ The homepage follows the approved future-gothic composition: architectural backg
 
 ## Publishing and deployment
 
-`daily-publish.yml` is the single scheduled publisher. It starts at 07:15 America/Toronto using two UTC windows and a local-hour guard for daylight saving. Generation and deployment take additional time. The manual-only `daily-edition.yml` delegates to the same workflow for compatibility. Date-based idempotency prevents duplicate editions.
+`daily-publish.yml` is the single scheduled publisher. It starts at 07:15 America/Toronto using two UTC windows and a Toronto guard that skips pre-07:00 starts. The second window also provides a recovery attempt if the first run failed or was delayed; an archived date is never generated twice. Generation and deployment take additional time. The manual-only `daily-edition.yml` delegates to the same workflow for compatibility. Date-based idempotency prevents duplicate editions.
 
 The publisher researches and generates one substantial lore chapter and five features spanning gaming culture, PC, MMORPGs, RPGs and console/cooperative gaming, each with original art. It validates the complete edition before committing. If main changes during generation, publication stops rather than rebasing stale rendered pages. A successful daily commit explicitly calls the reusable Pages workflow because commits made with GITHUB_TOKEN do not trigger another push workflow. Normal source commits also deploy through `pages.yml`.
 
