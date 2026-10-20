@@ -26,7 +26,7 @@ The owner corrected the repository API secret and the read-only authentication c
 
 Live API tests caught and repaired issues that mocks alone could not establish: research and schema-constrained drafting now use separate responses linked by the research response ID, source URLs must come from the retrieved registry, and short drafts receive bounded expansion using their previous context. Publisher tests still cover six-category output, request structure, duplicate-date prevention and failure on invalid credentials. The legacy launch-artwork workflow only verifies recovered original files.
 
-The schedule is enabled, and the normal Pages deployment path has passed. A complete successful preview demonstrates the generation/build path, not a guarantee of future scheduler timing or external API availability. The first unattended newly generated edition remains to be observed.
+The full paid API preview is now manual-only in automation-test.yml, so ordinary code edits do not automatically regenerate six articles and images. The daily schedule remains enabled, and the normal Pages deployment path has passed. A complete successful preview demonstrates the generation/build path, not a guarantee of future scheduler timing or external API availability. The first unattended newly generated edition remains to be observed.
 
 ## Network
 

@@ -1,11 +1,6 @@
 name: Test complete next Riftbound edition (no publication)
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/automation-test.yml'
-      - 'scripts/publish.mjs'
 permissions:
   contents: read
 concurrency:
