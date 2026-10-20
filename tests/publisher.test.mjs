@@ -20,7 +20,11 @@ test('complete six-category edition, correct API schema, and no duplicate public
   fs.writeFileSync(mock,`let article=0;globalThis.fetch=async(url,options)=>{
    const input=JSON.parse(options.body);
    if(url.endsWith('/responses')){
-    if(!input.include.includes('web_search_call.action.sources')||input.max_output_tokens!==5500||input.text.max_output_tokens) throw Error('Incorrect Responses request schema');
+    if(input.tools){
+     if(input.tool_choice!=='required'||!input.include.includes('web_search_call.action.sources'))throw Error('Research must search');
+     return {ok:true,json:async()=>({id:'research-'+article,status:'completed',output:[{type:'web_search_call',action:{sources:[{url:'https://example.com/one'},{url:'https://example.com/two'}]}}]})};
+    }
+    if(!input.previous_response_id||input.max_output_tokens!==8000||input.text.max_output_tokens)throw Error('Draft must retain verified research and valid schema');
     const lore=article===0;
     const title=lore?'Chapter 002 — The Adeptus Astartes':'Feature '+article;
     const paragraph=Array(lore?260:125).fill('editorial').join(' ');
