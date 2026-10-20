@@ -3,7 +3,8 @@ const files=fs.readdirSync("content/articles").filter(x=>x.endsWith(".json"));co
 const out=(function render(records) {
  const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
  const chron=records.filter(x=>x.category==="THE 40K CHRONICLES").sort((a,b)=>a.date.localeCompare(b.date));
- const articles=records.filter(x=>x.category!=="THE 40K CHRONICLES").sort((a,b)=>b.date.localeCompare(a.date));
+ const categoryOrder=['GAMING CULTURE','PC & TECH','MMORPG','RPG','CONSOLE & CO-OP'];
+ const articles=records.filter(x=>x.category!=="THE 40K CHRONICLES").sort((a,b)=>b.date.localeCompare(a.date)||categoryOrder.indexOf(a.category)-categoryOrder.indexOf(b.category));
  const lead=chron.at(-1);const latestDate=records.map(x=>x.date).sort().at(-1);const today=articles.filter(x=>x.date===latestDate);const all=[...chron,...articles];
  const partners=[["HAYVN STUDIO","Design & creative spaces","https://www.hayvnstudio.com/","{{ROOT}}assets/partners/hayvn-studio.webp"],["HAYVN SANCTUARY","Stillness & reflection","https://francoisbrosseau.github.io/Hayvnsanctuary/","{{ROOT}}assets/partners/hayvn-sanctuary.webp"],["WILDWIRE","Discover. Inspire. Evolve.","https://wildwiremag.com/","{{ROOT}}assets/partners/wildwire.webp"],["RITUWILD","Tools for living well","https://rituwild.com/","{{ROOT}}assets/partners/rituwild.webp"]];
  const cover=x=>x.image;

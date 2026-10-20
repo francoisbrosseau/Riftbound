@@ -20,13 +20,13 @@ test('complete six-category edition, correct API schema, and no duplicate public
   fs.writeFileSync(mock,`let article=0;globalThis.fetch=async(url,options)=>{
    const input=JSON.parse(options.body);
    if(url.endsWith('/responses')){
-    if(input.max_output_tokens!==5500||input.text.max_output_tokens) throw Error('Incorrect Responses request schema');
+    if(!input.include.includes('web_search_call.action.sources')||input.max_output_tokens!==5500||input.text.max_output_tokens) throw Error('Incorrect Responses request schema');
     const lore=article===0;
     const title=lore?'Chapter 002 — The Adeptus Astartes':'Feature '+article;
     const paragraph=Array(lore?260:125).fill('editorial').join(' ');
     const body=Array.from({length:6},(_,i)=>['## Section '+i,paragraph]).flat();
     article++;
-    return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({title,dek:'A distinct editorial feature.',body,sources:[{title:'Source one',url:'https://example.com/one'},{title:'Source two',url:'https://example.com/two'}],visualBrief:'A distinct gothic world.'}),annotations:[{type:'url_citation',url:'https://example.com/one'}]}]}]})};
+    return {ok:true,json:async()=>({status:'completed',output:[{type:'web_search_call',action:{sources:[{url:'https://example.com/one'}]}},{content:[{type:'output_text',text:JSON.stringify({title,dek:'A distinct editorial feature.',body,sources:[{title:'Source one',url:'https://example.com/one'},{title:'Source two',url:'https://example.com/two'}],visualBrief:'A distinct gothic world.'}),annotations:[]}]}]})};
    }
    return {ok:true,json:async()=>({data:[{b64_json:Buffer.alloc(21000).toString('base64')}]})};
   };`);
