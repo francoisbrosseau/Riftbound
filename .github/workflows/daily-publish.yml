@@ -1,8 +1,8 @@
 name: Publish RIFTBOUND daily edition
 on:
   schedule:
-    - cron: '15 11 * * *'
-    - cron: '15 12 * * *'
+    # Morning start plus recovery windows; existing editions skip generation.
+    - cron: '17 11,12,13,14,15 * * *'
   workflow_dispatch:
   workflow_call:
 permissions:
