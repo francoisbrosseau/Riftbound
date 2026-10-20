@@ -12,7 +12,7 @@ for(const f of files){const a=JSON.parse(fs.readFileSync(path.join(dir,f),'utf8'
  if(!allowed.has(a.category)||!a.title||!a.dek||!Array.isArray(a.body)||a.body.length<4)fail('Incomplete article: '+f);
  if(!/^\d{4}-\d\d-\d\d$/.test(a.date)||!/^assets\/covers\/[a-z0-9-]+\.(svg|png|webp)$/.test(a.image)||!fs.existsSync(a.image))fail('Invalid date or missing original image: '+f);
  if(a.body.join(' ').match(/\b(as an AI|I cannot|lorem ipsum)\b/i))fail('Generated boilerplate: '+f);
- const wc=a.body.join(' ').split(/\s+/).length;if(a.category==='THE 40K CHRONICLES'&&wc<1000)fail('Lore article is too brief: '+wc);
+ const wc=a.body.join(' ').split(/\s+/).length;if(wc<(a.category==='THE 40K CHRONICLES'?2000:1000))fail('Feature article is too brief: '+wc);
  if(a.date===latest.date)last.push(a);
 }
 for(const id of latest.articles)if(!ids.has(id))fail('Edition story missing: '+id);
@@ -32,7 +32,7 @@ for (const page of pages) {
   const target=path.resolve(path.dirname(page),decodeURIComponent(value.split(/[?#]/)[0]));
   if(!fs.existsSync(target)) fail('Broken '+attribute+' in '+page+': '+value);
  }
- if (!html.includes('assets/riftbound-logo.webp')) fail('Original logo missing: '+page);
+ if (!html.includes('assets/riftbound-footer-logo.webp')) fail('Original logo missing: '+page);
 }
 for (const editionFile of editions) {
  const edition=JSON.parse(fs.readFileSync(path.join('content/editions',editionFile),'utf8'));
