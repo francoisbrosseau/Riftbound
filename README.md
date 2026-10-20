@@ -20,14 +20,16 @@ The homepage follows the approved future-gothic composition: architectural backg
 
 The publisher researches and generates one substantial lore chapter and five features spanning gaming culture, PC, MMORPGs, RPGs and console/cooperative gaming, each with original art. It validates the complete edition before committing. If main changes during generation, publication stops rather than rebasing stale rendered pages. A successful daily commit explicitly calls the reusable Pages workflow because commits made with GITHUB_TOKEN do not trigger another push workflow. Normal source commits also deploy through `pages.yml`.
 
-### Current external blocker
+### Verified automation test — October 19, 2026
 
-The inspected failed launch-artwork run (39344361927) returned OpenAI HTTP 401 `invalid_api_key`. The repository Actions secret `OPENAI_API_KEY` must contain a valid API credential, not its variable name. Credentials were not copied from other repositories. API responses and paid daily generation cannot be confirmed until that credential is corrected and a new complete edition runs successfully. The launch-artwork workflow now only verifies the recovered files; it never regenerates them.
+The owner corrected the repository API secret and the read-only authentication check passed. The complete October 20 preview then passed in run https://github.com/francoisbrosseau/Riftbound/actions/runs/39353390224 on commit 1d5e168ddbfdf486f193002b2fa5fc8de1f0075f: six new sourced articles, six distinct generated covers, generated homepage/archives/reading pages and all validation checks. The next lore chapter contained 1,497 words. The preview had no Git credentials and confirmed production was untouched; October 20 was not published early.
 
-Publisher fixes include the malformed Responses request object, escaped template literals, missing console/culture categories, duplicate competing schedules, nested article image URLs and automatic deployment after bot commits. Publisher tests cover the API request schema, complete six-category output, repeat-run idempotency and fail-closed HTTP 401 handling. These tests do not establish that the configured external API credential works.
+Live API tests caught and repaired issues that mocks alone could not establish: research and schema-constrained drafting now use separate responses linked by the research response ID, source URLs must come from the retrieved registry, and short drafts receive bounded expansion using their previous context. Publisher tests still cover six-category output, request structure, duplicate-date prevention and failure on invalid credentials. The legacy launch-artwork workflow only verifies recovered original files.
+
+The schedule is enabled, and the normal Pages deployment path has passed. A complete successful preview demonstrates the generation/build path, not a guarantee of future scheduler timing or external API availability. The first unattended newly generated edition remains to be observed.
 
 ## Network
 
-Footer links: HAYVN Studio, HAYVN Sanctuary, WILDWIRE and RITUWILD. Only Riftbound source was changed.
+Footer links: HAYVN Studio, HAYVN Sanctuary, WILDWIRE and RITUWILD.
 
 Warhammer 40,000 and related names belong to Games Workshop. RIFTBOUND is independent and unaffiliated. Its articles are original commentary, not reproduced novels or rulebooks; editorial illustrations are independent artwork rather than official screenshots.
