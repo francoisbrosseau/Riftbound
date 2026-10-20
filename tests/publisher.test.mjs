@@ -32,6 +32,10 @@ test('complete six-category edition, correct API schema, and no duplicate public
     article++;
     return {ok:true,json:async()=>({status:'completed',output:[{type:'web_search_call',action:{sources:[{url:'https://example.com/one'}]}},{content:[{type:'output_text',text:JSON.stringify({title,dek:'A distinct editorial feature.',body,sources:[{title:'Source one',url:'https://example.com/one'},{title:'Source two',url:'https://example.com/two'}],visualBrief:'A distinct gothic world.'}),annotations:[]}]}]})};
    }
+   if(article===1){
+    if(!input.prompt.includes('Exact article topic: The Adeptus Astartes')||!input.prompt.includes('recognizable canonical armour'))throw Error('Lore cover must retain its researched 40K identity');
+    if(input.prompt.includes('without text, watermarks, franchise logos'))throw Error('Generic cover restriction leaked into lore');
+   }else if(!input.prompt.startsWith('Original cinematic editorial artwork for an independent science-fiction/fantasy gaming magazine.'))throw Error('Gaming cover instructions changed');
    return {ok:true,json:async()=>({data:[{b64_json:Buffer.alloc(21000).toString('base64')}]})};
   };`);
   const args=['--import',mock,publisher];
