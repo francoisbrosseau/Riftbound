@@ -1,0 +1,44 @@
+name: Test complete next Riftbound edition (no publication)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/automation-test.yml'
+permissions:
+  contents: read
+concurrency:
+  group: riftbound-automation-test
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare isolated working copy without Git credentials
+        run: |
+          mkdir -p "$RUNNER_TEMP/riftbound-preview"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/riftbound-preview"
+      - name: Generate tomorrow's full edition with the real APIs
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd "$RUNNER_TEMP/riftbound-preview"
+          export RIFTBOUND_EDITION_DATE=$(TZ=America/Toronto date -d tomorrow +%F)
+          npm run check
+          node scripts/publish.mjs
+          npm run build
+          npm test
+      - name: Keep the unpublished edition for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: riftbound-next-edition-preview
+          path: ${{ runner.temp }}/riftbound-preview
+          retention-days: 7
+      - name: Confirm production was untouched
+        run: test -z "$(git status --porcelain --untracked-files=no)"

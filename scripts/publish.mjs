@@ -1,6 +1,7 @@
 import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';
 const key=process.env.OPENAI_API_KEY;const model=process.env.RIFTBOUND_TEXT_MODEL||'gpt-4.1';const imageModel=process.env.RIFTBOUND_IMAGE_MODEL||'gpt-image-1';const tz='America/Toronto';
-const date=new Intl.DateTimeFormat('en-CA',{timeZone:tz}).format(new Date());
+const date=process.env.RIFTBOUND_EDITION_DATE||new Intl.DateTimeFormat('en-CA',{timeZone:tz}).format(new Date());
+if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw Error('Invalid edition date');
 const fail=m=>{throw Error(m)};
 const dir='content/editions';fs.mkdirSync(dir,{recursive:true});if(fs.existsSync(path.join(dir,date+'.json'))){console.log('ALREADY_PUBLISHED '+date);process.exit(0)}
 if(!key || key.trim()==='OPENAI_API_KEY')fail('Set OPENAI_API_KEY to a valid API credential in repository Actions secrets. Nothing published.');
