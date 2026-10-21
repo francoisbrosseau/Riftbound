@@ -2,7 +2,8 @@ name: Publish RIFTBOUND daily edition
 on:
   schedule:
     # Morning start plus recovery windows; existing editions skip generation.
-    - cron: '17 11,12,13,14,15 * * *'
+    - cron: '17 7,8,9,10,11,12,14,16 * * *'
+      timezone: America/Toronto
   workflow_dispatch:
   workflow_call:
 permissions:
@@ -18,7 +19,7 @@ jobs:
     timeout-minutes: 75
     outputs:
       publish: ${{ steps.window.outputs.publish }}
-      commit: ${{ steps.commit.outputs.sha }}
+      commit: ${{ steps.commit.outputs.sha || steps.window.outputs.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,10 +38,16 @@ jobs:
           HOUR=$(TZ=America/Toronto date +%H)
           DATE=$(TZ=America/Toronto date +%F)
           if [ "$EVENT_NAME" = "schedule" ] && [ "$HOUR" -lt 7 ]; then echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
-          if [ -f "content/editions/$DATE.json" ]; then echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          if [ -f "content/editions/$DATE.json" ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "generate=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           echo "publish=true" >> "$GITHUB_OUTPUT"
+          echo "generate=true" >> "$GITHUB_OUTPUT"
       - name: Research and generate six articles and original covers
-        if: steps.window.outputs.publish == 'true'
+        if: steps.window.outputs.generate == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: node scripts/publish.mjs
@@ -50,7 +57,7 @@ jobs:
           npm test
       - name: Commit complete issue only after validation
         id: commit
-        if: steps.window.outputs.publish == 'true'
+        if: steps.window.outputs.generate == 'true'
         run: |
           git config user.name "riftbound-editorial-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -69,3 +76,15 @@ jobs:
     uses: ./.github/workflows/pages.yml
     with:
       source_ref: ${{ needs.edition.outputs.commit }}
+  verify:
+    needs: [edition, deploy]
+    if: needs.edition.outputs.publish == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.edition.outputs.commit }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/verify-live.mjs

@@ -16,7 +16,7 @@ The homepage follows the approved future-gothic composition: architectural backg
 
 ## Publishing and deployment
 
-`daily-publish.yml` is the single scheduled publisher. It starts at 07:15 America/Toronto using two UTC windows and a Toronto guard that skips pre-07:00 starts. The second window also provides a recovery attempt if the first run failed or was delayed; an archived date is never generated twice. Generation and deployment take additional time. The manual-only `daily-edition.yml` delegates to the same workflow for compatibility. Date-based idempotency prevents duplicate editions.
+`daily-publish.yml` is the single scheduled publisher. It starts at 07:17 America/Toronto, with recovery windows at 08:17, 09:17, 10:17, 11:17, 12:17, 14:17 and 16:17. GitHub may delay or drop scheduled events; a configured schedule is not proof of publication. The manual-only `daily-edition.yml` delegates to the same workflow. Date-based idempotency prevents duplicate editions. If today's edition already exists, recovery redeploys and verifies it without generating paid content again. Every current workflow publication checks the public date, six article URLs and six cover hashes after deployment.
 
 The publisher researches and generates one substantial lore chapter and five features spanning gaming culture, PC, MMORPGs, RPGs and console/cooperative gaming, each with original art. It validates the complete edition before committing. If main changes during generation, publication stops rather than rebasing stale rendered pages. A successful daily commit explicitly calls the reusable Pages workflow because commits made with GITHUB_TOKEN do not trigger another push workflow. Normal source commits also deploy through `pages.yml`.
 
