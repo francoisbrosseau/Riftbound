@@ -6,6 +6,9 @@ on:
       timezone: America/Toronto
   workflow_dispatch:
   workflow_call:
+  push:
+    branches: [main]
+    paths: ['.github/recover-daily-edition']
 permissions:
   contents: write
   pages: write
@@ -46,11 +49,27 @@ jobs:
           fi
           echo "publish=true" >> "$GITHUB_OUTPUT"
           echo "generate=true" >> "$GITHUB_OUTPUT"
+      - name: Select checkpoint date
+        id: date
+        run: echo "value=$(TZ=America/Toronto date +%F)" >> "$GITHUB_OUTPUT"
+      - name: Recover validated articles and original covers
+        if: steps.window.outputs.generate == 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: .riftbound-runs
+          key: riftbound-${{ steps.date.outputs.value }}-${{ hashFiles('scripts/publish.mjs') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: riftbound-${{ steps.date.outputs.value }}-${{ hashFiles('scripts/publish.mjs') }}-
       - name: Research and generate six articles and original covers
         if: steps.window.outputs.generate == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: node scripts/publish.mjs
+      - name: Save validated progress even when a later article fails
+        if: always() && steps.window.outputs.generate == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .riftbound-runs
+          key: riftbound-${{ steps.date.outputs.value }}-${{ hashFiles('scripts/publish.mjs') }}-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Build and validate
         run: |
           npm run build
