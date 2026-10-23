@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs",
-    "test": "node scripts/validate.mjs && node --test tests/publisher.test.mjs",
-    "check": "node --check scripts/build.mjs && node --check scripts/publish.mjs && node --check scripts/daily-publish.mjs && node --check scripts/validate.mjs && node --check scripts/check-api.mjs"
+    "build": "node scripts/build.mjs && node scripts/build-discovery.mjs",
+    "test": "node scripts/validate.mjs && node --test tests/publisher.test.mjs && node --test tests/discovery.test.mjs",
+    "check": "node --check scripts/build.mjs && node --check scripts/publish.mjs && node --check scripts/daily-publish.mjs && node --check scripts/validate.mjs && node --check scripts/check-api.mjs && node --check scripts/build-discovery.mjs && node --check scripts/submit-indexnow.mjs"
   }
 }

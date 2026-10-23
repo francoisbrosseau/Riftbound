@@ -38,3 +38,9 @@ Warhammer 40,000 and related names belong to Games Workshop. RIFTBOUND is indepe
 ### October 21 recovery
 
 A fresh run rejected an MMORPG draft with an archived headline after completing three articles. Duplicate headlines now enter the bounded revision loop with an explicit new-angle instruction. Completed article/cover pairs are checkpointed by Toronto date and publisher code, with cover hashes checked on recovery. The workflow saves progress even after a later failure and restores it on the next attempt. Only a complete validated six-story edition reaches the public archive. An owner-controlled `.github/recover-daily-edition` marker can trigger the same date-protected publisher on main without creating another scheduler.
+
+## Free search discovery
+
+Every `npm run build` regenerates `sitemap.xml` for all public articles and archive pages, an RSS feed at `/rss.xml`, and canonical/feed metadata. These generated XML files are intentionally untracked; the Pages package always includes fresh copies. `robots.txt` advertises the sitemap. Google Search Console's HTML ownership file is preserved in the deployment package.
+
+After a successful Pages deployment, `scripts/submit-indexnow.mjs` verifies the live public ownership file and submits the latest edition's article URLs and updated archives to participating IndexNow engines. Run it with `--all` for the initial archive submission. The notification retries transient failures; a notification failure is visible as a workflow warning and cannot stop or roll back the magazine deployment. No new scheduler, paid API or generation is involved. IndexNow does not submit to Google and a received notification does not guarantee indexing or ranking. Google discovers updates through the registered sitemap. Directory submissions such as Feedspot are one-time editorial reviews, not recurring bulk submissions.

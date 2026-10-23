@@ -40,7 +40,8 @@ jobs:
       - name: Package only the public website
         run: |
           mkdir -p dist
-          cp index.html chapters.html gaming.html about.html CNAME dist/
+          cp index.html chapters.html gaming.html about.html CNAME sitemap.xml rss.xml robots.txt google9beed852449cd169.html dist/
+          cp "$(cat config/indexnow-key.txt).txt" dist/
           cp -R stories assets dist/
           touch dist/.nojekyll
       - uses: actions/configure-pages@v5
@@ -50,3 +51,7 @@ jobs:
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Notify participating search engines after successful deployment
+        continue-on-error: true
+        run: node scripts/submit-indexnow.mjs
