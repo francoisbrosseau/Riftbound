@@ -34,6 +34,7 @@ test('complete six-category edition, correct API schema, and no duplicate public
     if(duplicate)duplicateReturned=true;else article++;
     return {ok:true,json:async()=>({status:'completed',output:[{type:'web_search_call',action:{sources:[{url:'https://example.com/one'}]}},{content:[{type:'output_text',text:JSON.stringify({title,dek:'A distinct editorial feature.',body,sources:[{title:'Source one',url:'https://example.com/one'},{title:'Source two',url:'https://example.com/two'}],visualBrief:'A distinct gothic world.'}),annotations:[]}]}]})};
    }
+   if(input.model!=='gpt-image-2.5-flare'||input.size!=='1536x1024'||input.quality!=='medium')throw Error('Cover request must use the supported image model and approved quality');
    if(article===1){
     if(!input.prompt.includes('Exact article topic: The Adeptus Astartes')||!input.prompt.includes('recognizable canonical armour'))throw Error('Lore cover must retain its researched 40K identity');
     if(input.prompt.includes('without text, watermarks, franchise logos'))throw Error('Generic cover restriction leaked into lore');
