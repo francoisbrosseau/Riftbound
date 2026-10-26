@@ -48,3 +48,7 @@ After a successful Pages deployment, `scripts/submit-indexnow.mjs` verifies the 
 ### October 24 model compatibility repair
 
 The cover generator now defaults to `gpt-image-2.5-flare`, replacing `gpt-image-1`, which was retired October 23. The existing landscape size, medium quality, prompts, chapter sequence and publication schedule are unchanged. Image request failures report the HTTP status, selected model, rejected parameter and redacted API error message so a permanent configuration error is distinguishable from a transient service failure. Publisher integration tests assert the supported cover model and request settings.
+
+### October 26 cover recovery
+
+A moderation rejection may use one different, nonviolent architectural scene relevant to the lore faction. The alternative excludes people, creatures, weapons, combat and graphic imagery and does not include the rejected visual brief. Safety settings remain unchanged. A second rejection, invalid credential, quota error or malformed image still stops publication without a partial edition. Tests cover these limits.
