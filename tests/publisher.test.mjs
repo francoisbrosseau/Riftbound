@@ -17,12 +17,16 @@ test('complete six-category edition, correct API schema, and no duplicate public
  const dir=fixture();
  try {
   const mock=path.join(dir,'mock.mjs');
+  fs.writeFileSync(path.join(dir,'content/articles/000-culture.json'),JSON.stringify({id:'old-culture',title:'Archive sentinel: accessible game communities',category:'GAMING CULTURE',date:'2000-01-01'}));
+  for(let i=0;i<31;i++)fs.writeFileSync(path.join(dir,'content/articles/unrelated-'+i+'.json'),JSON.stringify({id:'unrelated-'+i,title:'Unrelated PC archive '+i,category:'PC & TECH',date:'2000-01-01'}));
+  const archiveCount=fs.readdirSync(path.join(dir,'content/articles')).length;
   fs.writeFileSync(mock,`let article=Number(process.env.RESUME_ARTICLE||0),duplicateReturned=false;globalThis.fetch=async(url,options)=>{
    const input=JSON.parse(options.body);
    if(url.endsWith('/responses')){
     if(process.env.FAIL_AFTER && article>=Number(process.env.FAIL_AFTER))return {ok:false,status:401,json:async()=>({error:{code:'invalid_api_key'}})};
     if(input.tools){
      if(input.tool_choice!=='required'||!input.include.includes('web_search_call.action.sources'))throw Error('Research must search');
+     if(article===1&&(!input.input.includes('Archive sentinel: accessible game communities')||!input.input.includes('Before researching, select one specific subject')))throw Error('Research must choose a distinct angle against the full category archive');
      return {ok:true,json:async()=>({id:'research-'+article,status:'completed',output:[{type:'web_search_call',action:{sources:[{url:'https://example.com/one'},{url:'https://example.com/two'}]}}]})};
     }
     if(!input.previous_response_id||input.max_output_tokens!==11000||input.text.max_output_tokens)throw Error('Draft must retain verified research and valid schema');
@@ -45,7 +49,7 @@ test('complete six-category edition, correct API schema, and no duplicate public
   const interrupted=spawnSync(process.execPath,args,{cwd:dir,env:{...process.env,OPENAI_API_KEY:'test-credential',FAIL_AFTER:'3'},encoding:'utf8'});
   assert.notEqual(interrupted.status,0);
   assert.equal(fs.readdirSync(path.join(dir,'content/editions')).length,0,'A later failure cannot publish a partial edition');
-  assert.equal(fs.readdirSync(path.join(dir,'content/articles')).length,1,'The published article archive remains unchanged');
+  assert.equal(fs.readdirSync(path.join(dir,'content/articles')).length,archiveCount,'The published article archive remains unchanged');
   const first=spawnSync(process.execPath,args,{cwd:dir,env:{...process.env,OPENAI_API_KEY:'test-credential',RESUME_ARTICLE:'3'},encoding:'utf8'});
   assert.equal(first.status,0,first.stderr);
   assert.equal((first.stdout.match(/RECOVERED/g)||[]).length,3,'All three validated articles and covers survive recovery');

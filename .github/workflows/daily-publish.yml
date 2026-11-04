@@ -59,7 +59,11 @@ jobs:
         with:
           path: .riftbound-runs
           key: riftbound-${{ steps.date.outputs.value }}-${{ hashFiles('scripts/publish.mjs') }}-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: riftbound-${{ steps.date.outputs.value }}-${{ hashFiles('scripts/publish.mjs') }}-
+          # The publisher verifies each saved date/category/topic and cover hash.
+          # A prompt repair can therefore reuse already validated work today.
+          restore-keys: |
+            riftbound-${{ steps.date.outputs.value }}-${{ hashFiles('scripts/publish.mjs') }}-
+            riftbound-${{ steps.date.outputs.value }}-
       - name: Research and generate six articles and original covers
         if: steps.window.outputs.generate == 'true'
         env:

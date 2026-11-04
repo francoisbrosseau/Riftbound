@@ -1,2 +1,1 @@
-Recover the missing 2026-11-04 edition using the existing date-protected publisher, checkpoint recovery, validation and live verification.
-Owner-requested recovery on November 4, 2026.
+Recover November 4, 2026 after repairing archive-aware topic selection. Reuse validated current-day checkpoints and publish only a complete verified edition.
