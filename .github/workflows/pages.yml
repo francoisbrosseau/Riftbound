@@ -27,6 +27,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
+    timeout-minutes: 35
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -56,6 +57,9 @@ jobs:
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # The growing public archive can still be syncing after 10 minutes.
+          timeout: '1800000'
 
       - name: Notify participating search engines after successful deployment
         continue-on-error: true
