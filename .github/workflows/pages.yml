@@ -3,6 +3,11 @@ name: Validate and deploy RIFTBOUND Pages
 on:
   push:
     branches: [main]
+    # Recovery markers start the publisher, which deploys the completed issue.
+    # Do not race it with an old-site deployment from the same triggering SHA.
+    paths-ignore:
+      - '.github/**'
+      - '**/*.md'
   workflow_dispatch:
   workflow_call:
     inputs:
