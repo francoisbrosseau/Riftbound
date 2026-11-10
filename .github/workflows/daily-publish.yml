@@ -3,8 +3,11 @@ on:
   schedule:
     # Start overnight so generation and delayed schedules have time before morning.
     # Recovery windows reuse validated checkpoints; dated editions skip generation.
-    - cron: '17 1,3,5,7,8,9,10,11,12,14,16 * * *'
-      timezone: America/Toronto
+    - cron: '17 1,3,5,7,9,10,11,12,14,16 * * *'
+      timezone: America/Cancun
+    # Daily 08:00 Cancun readiness/recovery checkpoint.
+    - cron: '0 8 * * *'
+      timezone: America/Cancun
   workflow_dispatch:
   workflow_call:
   push:
