@@ -22,3 +22,13 @@ test('built discovery covers every article and does not link missing pages',()=>
  assert.ok(fs.readFileSync('robots.txt','utf8').includes(base+'sitemap.xml'));
  assert.ok(fs.readFileSync('index.html','utf8').includes('rel="canonical" href="'+base+'"'));
 });
+
+test('article sharing uses its own cover and contextual reading links',()=>{
+ for(const file of fs.readdirSync('content/articles').filter(f=>f.endsWith('.json'))){
+  const article=JSON.parse(fs.readFileSync('content/articles/'+file));
+  const page=fs.readFileSync('stories/'+article.id+'.html','utf8');
+  assert.ok(page.includes('property="og:image" content="'+base+article.image+'"'),article.id);
+  assert.ok(page.includes('property="og:url" content="'+base+'stories/'+article.id+'.html"'),article.id);
+  assert.ok(page.includes('aria-label="Read next"'),article.id);
+ }
+});
