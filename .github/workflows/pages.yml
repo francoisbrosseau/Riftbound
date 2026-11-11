@@ -46,7 +46,7 @@ jobs:
       - name: Package only the public website
         run: |
           mkdir -p dist
-          cp index.html chapters.html gaming.html about.html CNAME sitemap.xml rss.xml robots.txt google9beed852449cd169.html dist/
+          cp start-here.html index.html chapters.html gaming.html about.html CNAME sitemap.xml rss.xml robots.txt google9beed852449cd169.html dist/
           cp "$(cat config/indexnow-key.txt).txt" dist/
           cp -R stories assets dist/
           touch dist/.nojekyll
