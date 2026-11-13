@@ -1,0 +1,43 @@
+name: Check and recover the morning RIFTBOUND edition
+on:
+  schedule:
+    # UTC clock, equivalent to 03:43, 05:43, 06:43 and 07:43 Cancun year-round.
+    - cron: '43 8,10,11,12 * * *'
+    # Follow-up after the 08:00 readiness target.
+    - cron: '13 13 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: riftbound-morning-watchdog
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify the real edition and recover a missing start
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if node scripts/verify-live.mjs; then
+            echo 'Current complete edition verified on the public domain.'
+            exit 0
+          fi
+          active=$(gh run list --workflow daily-publish.yml --branch main --limit 30 --json status --jq '[.[] | select(.status == "queued" or .status == "in_progress" or .status == "waiting" or .status == "pending")] | length')
+          if [ "$active" != 0 ]; then
+            echo 'Publisher active. Preserve its generation and deployment.'
+            exit 0
+          fi
+          gh workflow run daily-publish.yml --ref main
+          echo 'Recovery requested. The publisher must validate, deploy and verify before publication is complete.'
