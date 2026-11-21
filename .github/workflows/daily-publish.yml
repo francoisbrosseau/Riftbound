@@ -15,6 +15,7 @@ on:
     paths: ['.github/recover-daily-edition']
 permissions:
   contents: write
+  actions: read
   pages: write
   id-token: write
 concurrency:
