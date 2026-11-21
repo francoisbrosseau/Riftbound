@@ -36,3 +36,15 @@ not a one-time reminder. HAYVN generation and its newsletter freshness guard
 remain separately managed and must not depend on either magazine succeeding.
 
 Owner update November 10, 2026: target daily public readiness by 08:00 America/Cancun. Retain overnight preparation and recovery windows, with an exact 08:00 scheduled readiness/recovery attempt. Keep recurring tasks enabled after every occurrence. External scheduler and provider timing remain best effort.
+
+## November 21 deployment retry repair
+
+The first Pages upload was temporarily absent from artifact listing. Retrying the
+job then left two artifacts named `github-pages` in the same run, so deployment
+refused the ambiguous match. Each Pages attempt now uploads and deploys the exact
+name `github-pages-${{ github.run_id }}-${{ github.run_attempt }}`. A bounded
+metadata visibility check precedes deployment. The caller chain grants only the
+additional Actions read permission needed to inspect its own run's artifacts.
+The existing one-retry handler recognizes these artifact errors. Editorial,
+archive, concurrency and live verification gates remain in force. Existing dated
+content is redeployed without generating another edition.
