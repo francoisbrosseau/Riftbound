@@ -24,11 +24,20 @@ jobs:
         run: |
           set -euo pipefail
           gh run view "$RUN_ID" --log-failed > failed.log
-          if rg -qi 'insufficient_quota|billing_hard_limit|invalid_api_key|authentication failed|401 Unauthorized|403 Forbidden' failed.log; then
+          # Use the runner's standard grep; ripgrep is not always installed.
+          # A classifier error must fail visibly, not look like a non-match.
+          if grep -Eqi 'insufficient_quota|billing_hard_limit|invalid_api_key|authentication failed|401 Unauthorized|403 Forbidden' failed.log; then
             echo 'Authentication, permission or quota failure requires intervention.'
             exit 0
+          else
+            result=$?
+            if [ "$result" -ne 1 ]; then exit "$result"; fi
           fi
-          if ! rg -qi 'ETIMEDOUT|ECONNRESET|ECONNREFUSED|EAI_AGAIN|socket hang up|502 Bad Gateway|503 Service Unavailable|504 Gateway|syncing_files|deployment.*timed out|main changed during generation|No artifacts named|Multiple artifacts named|Pages artifact metadata not visible' failed.log; then
+          if grep -Eqi 'ETIMEDOUT|ECONNRESET|ECONNREFUSED|EAI_AGAIN|socket hang up|502 Bad Gateway|503 Service Unavailable|504 Gateway|syncing_files|deployment.*timed out|main changed during generation|No artifacts named|Multiple artifacts named|Pages artifact metadata not visible' failed.log; then
+            : # Known transient failure; continue to the guarded retry.
+          else
+            result=$?
+            if [ "$result" -ne 1 ]; then exit "$result"; fi
             echo 'No recognized transient error. Preserve editorial failure for investigation.'
             exit 0
           fi
